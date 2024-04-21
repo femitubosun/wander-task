@@ -11,7 +11,7 @@ export class SqliteCacheDriver implements ICacheDriver {
     try {
       const result = await Database.cursor!.get<CacheRow>(
         `SELECT weather_data, created_at
-           FROM ${appConfig.CACHE_TABLE_NAME}
+           FROM ${appConfig.CACHE.CACHE_TABLE_NAME}
            WHERE cache_key = ?`,
         key,
       );
@@ -26,7 +26,7 @@ export class SqliteCacheDriver implements ICacheDriver {
   public async set(key: string, value: string): Promise<boolean> {
     try {
       const query = `
-        INSERT INTO ${appConfig.CACHE_TABLE_NAME} (cache_key, weather_data)
+        INSERT INTO ${appConfig.CACHE.CACHE_TABLE_NAME} (cache_key, weather_data)
         VALUES ('${key}', '${value}')
     `;
       await Database.cursor!.run(query);
@@ -42,7 +42,7 @@ export class SqliteCacheDriver implements ICacheDriver {
   public async delete(key: string) {
     try {
       const query = `
-        DELETE FROM ${appConfig.CACHE_TABLE_NAME}
+        DELETE FROM ${appConfig.CACHE.CACHE_TABLE_NAME}
         WHERE cache_key = ?
     `;
 

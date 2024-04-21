@@ -7,16 +7,15 @@ export class Application {
   constructor(private express: Express) {
     const PORT = appConfig.PORT;
 
-    this.#setupDb();
+    this.#spinUpDb();
 
     this.express.app.listen(PORT, () => {
-      Logger.info(`Server Started on Port ${PORT}`);
+      Logger.info(`Server Launched on Port ${PORT} 🚀`);
     });
   }
 
-  async #setupDb() {
+  async #spinUpDb() {
     const database = Database;
     await database.openDb();
-    // Database;
   }
 }

@@ -9,7 +9,7 @@ const Colors = {
 
 const customWinstonFormat = winston.format.printf(
   ({ level, message, timestamp }) => {
-    return `${Colors[level as keyof typeof Colors]}[${level.toUpperCase()}] ${timestamp} : ${message}`;
+    return `${Colors[level as keyof typeof Colors]}[${level.toUpperCase()}] ${timestamp}: ${message}`;
   },
 );
 

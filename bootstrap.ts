@@ -3,8 +3,7 @@ import moduleAlias from "module-alias";
 moduleAlias.addAlias("@", __dirname + "/");
 moduleAlias();
 
-// import './process'
-
+import "Config/index";
 import { Express } from "@/Infra/Express";
 import { Application } from "@/Infra/Application";
 

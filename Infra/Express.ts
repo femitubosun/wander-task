@@ -27,19 +27,15 @@ export class Express {
     this.app.use(
       cors({
         origin: ["*"],
-      })
+      }),
     );
 
     Logger.info("Infrastructure Middleware Attached");
   }
-
-  #attachAppMiddleWare() {}
 
   #attachRouter() {
     this.app.use("", Routes);
 
     Logger.info("Routes Attached");
   }
-
-  #attachErrorHandlers() {}
 }
