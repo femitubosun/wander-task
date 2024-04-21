@@ -1,0 +1,23 @@
+export enum HttpStatusCodeEnum {
+  OK = 200,
+
+  CREATED = 201,
+
+  NO_CONTENT = 204,
+
+  BAD_REQUEST = 400,
+
+  UNAUTHENTICATED = 401,
+
+  FORBIDDEN = 403,
+
+  NOT_FOUND = 404,
+
+  TEA_POT = 418,
+
+  UNPROCESSABLE_ENTITY = 422,
+
+  TOO_MANY_REQUESTS = 429,
+
+  INTERNAL_SERVER_ERROR = 500,
+}
