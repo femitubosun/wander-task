@@ -8,7 +8,7 @@ import { HttpStatusCodeEnum } from "@/Common/Utils";
 import { Logger } from "@/Common/Utils/Logger";
 import { TemperatureConverter } from "@/Helpers/TemperatureConverter";
 import { WanderWeatherApiClient } from "@/Infra/External/WanderWeatherApiClient";
-import { SqliteCachingDriver } from "@/Services/Caching/SqliteCachingDriver";
+import { SqliteCacheDriver } from "@/Services/Caching/SqliteCacheDriver";
 
 import { Request, Response } from "express";
 
@@ -25,16 +25,16 @@ class WeatherSearchController {
       });
 
       if (err !== null) {
-        return response.status(HttpStatusCodeEnum.BAD_REQUEST).json({
-          statusCode: HttpStatusCodeEnum.BAD_REQUEST,
+        return response.status(err.statusCode).json({
+          statusCode: err.statusCode,
           status: ERROR,
-          message: "Something went wrong",
+          message: err.message,
         });
       }
 
       const tempInfo = TemperatureConverter.convert(data);
 
-      const cacheDriver = new SqliteCachingDriver();
+      const cacheDriver = new SqliteCacheDriver();
 
       await cacheDriver.set(
         cacheDriver.keyFrom({

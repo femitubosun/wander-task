@@ -15,6 +15,4 @@ router.post(
   WeatherSearchController.handle,
 );
 
-// router.use("/");
-
 export default router;

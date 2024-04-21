@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { SqliteCachingDriver } from "@/Services/Caching/SqliteCachingDriver";
+import { SqliteCacheDriver } from "@/Services/Caching/SqliteCacheDriver";
 import { NULL_OBJECT, SUCCESS, TEMPERATURE_RETRIEVED } from "@/Common/Messages";
 import { HttpStatusCodeEnum } from "@/Common/Utils";
-import * as console from "node:console";
+import { Middleware } from "@/TypeChecking/Api/Middleware";
 
-export const cacheMiddleware = async (
+export const cacheMiddleware: Middleware = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   const { date, location } = request.body;
 
-  const cacheDriver = new SqliteCachingDriver();
+  const cacheDriver = new SqliteCacheDriver();
 
   const cacheKey = cacheDriver.keyFrom({
     location,
@@ -25,7 +25,7 @@ export const cacheMiddleware = async (
   }
 
   if (cacheObject.hasExpired()) {
-    await cacheObject.remove();
+    await cacheObject.delete();
 
     return next();
   }

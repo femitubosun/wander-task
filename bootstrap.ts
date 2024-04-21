@@ -1,6 +1,3 @@
-"use strict";
-
-import "reflect-metadata";
 import moduleAlias from "module-alias";
 
 moduleAlias.addAlias("@", __dirname + "/");
@@ -11,4 +8,4 @@ moduleAlias();
 import { Express } from "@/Infra/Express";
 import { Application } from "@/Infra/Application";
 
-const app = new Application(new Express());
+new Application(new Express());

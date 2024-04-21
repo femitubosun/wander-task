@@ -2,7 +2,6 @@ import { CacheRow } from "@/TypeChecking/Cache/CacheRow";
 import { appConfig } from "@/Config";
 import { DateTime } from "luxon";
 import { ICacheDriver } from "@/TypeChecking/Cache/ICacheDriver";
-import * as console from "node:console";
 
 type WeatherCacheObjectOptions = {
   key: string;
@@ -26,7 +25,7 @@ export class WeatherCacheObject {
     return cacheCreatedAt < cacheExpirationOffset;
   }
 
-  public async remove(): Promise<void> {
+  public async delete(): Promise<void> {
     await this.options.cacheDriver.delete(this.options.key);
   }
 
