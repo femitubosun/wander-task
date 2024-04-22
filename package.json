@@ -4,7 +4,8 @@
   "description": "Wander Backend Developer Test",
   "main": "bootstrap.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --testPathPattern='\\.unit\\.test\\.ts$'",
+    "test:integration": "./Scripts/run-integration.sh",
     "build": "tsc && resolve-tspaths",
     "prod": "node dist/bootstrap.js",
     "start": "ts-node --transpile-only -r tsconfig-paths/register ./bootstrap.ts",

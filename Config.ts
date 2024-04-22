@@ -16,7 +16,7 @@ export const appConfig = {
   CACHE: {
     EXPIRE_AFTER_MINUTES:
       parseInt(process.env["EXPIRE_AFTER_MINUTES"], 10) || 60,
-    CACHE_DB_NAME: process.env["CACHE_DB_NAME"],
+    DB_URL: process.env["CACHE_DB_URL"],
     CACHE_TABLE_NAME: process.env["CACHE_TABLE_NAME"],
   },
   get CURRENT_DATE_TIME() {

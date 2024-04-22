@@ -8,6 +8,4 @@ class Database {
   public weatherCache = this.cursor.weatherCache;
 }
 
-const instance = new Database();
-
-export default instance;
+export default new Database();

@@ -12,17 +12,15 @@ export class TemperatureConverter {
   public static convert(convertTempDto: ConvertTempDto): ConvertTempReturnType {
     const { unit, temperature } = convertTempDto;
 
-    const cleanedTemperature = this.#roundNumber(temperature);
-
     return {
       celsius:
         unit == "celsius"
-          ? cleanedTemperature
-          : this.#convertFahrenheitToCelsius(cleanedTemperature),
+          ? temperature
+          : this.#convertFahrenheitToCelsius(temperature),
       fahrenheit:
         unit == "fahrenheit"
-          ? cleanedTemperature
-          : this.#convertCelsiusToFahrenheit(cleanedTemperature),
+          ? temperature
+          : this.#convertCelsiusToFahrenheit(temperature),
     };
   }
 
@@ -35,6 +33,6 @@ export class TemperatureConverter {
   }
 
   static #roundNumber(num: number): number {
-    return num % 1 ? num : parseFloat(num.toFixed(1));
+    return Math.round(num * 10) / 10;
   }
 }

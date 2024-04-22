@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import Routes from "@/Api/Router";
 import { Logger } from "@/Common/Utils/Logger";
 import bodyParser from "body-parser";
