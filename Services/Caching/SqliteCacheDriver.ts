@@ -1,11 +1,7 @@
 import { ICacheDriver } from "@/TypeChecking/Cache/ICacheDriver";
 import Database from "@/Infra/Database";
-import { appConfig } from "@/Config";
-
-import { CacheRow } from "@/TypeChecking/Cache/CacheRow";
 import { WeatherCacheObject } from "@/Services/Caching/WeatherCacheObject";
 import { Logger } from "@/Common/Utils/Logger";
-import * as console from "node:console";
 
 export class SqliteCacheDriver implements ICacheDriver {
   public async get(key: string): Promise<WeatherCacheObject | null> {
@@ -44,7 +40,7 @@ export class SqliteCacheDriver implements ICacheDriver {
 
   public async delete(key: string) {
     try {
-      const result = await Database.weatherCache.delete({
+      await Database.weatherCache.delete({
         where: {
           cacheKey: key,
         },
