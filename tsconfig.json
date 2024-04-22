@@ -1,26 +1,21 @@
 {
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "transpileOnly": true,
+    "files": true,
+    "require": ["tsconfig-paths/register"]
   },
 
-  "include": [
-    ".", "**/*.sql"
-  ],
+  "include": [".", "**/*.sql"],
+  "exclude": ["./coverage", "__tests__", "**/*.test.ts", "jest.config.js"],
   "compilerOptions": {
     "outDir": "./dist",
     "target": "ES2020",
-    "types": ["node"],
-    "lib": [
-      "ES2020"
-    ],
+    "types": ["node", "jest"],
+    "lib": ["ES2020"],
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -28,5 +23,3 @@
     "skipLibCheck": true
   }
 }
-
-

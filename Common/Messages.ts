@@ -15,6 +15,8 @@ export const VALIDATION_ERROR = "Validation Error";
 export const CRITICAL_ERROR_EXITING =
   "Application Encountered a Critical Error. Exiting";
 export const ENV_NOT_FOUND_ERROR = ".env File is missing";
+export const ERROR_PROCESSING_REQUEST_TRY_AGAIN =
+  "There was an error while processing this request. Please try again later";
 
 /* ----------------------------------- Object States  ------------------------------*/
 export const NULL_OBJECT = null;

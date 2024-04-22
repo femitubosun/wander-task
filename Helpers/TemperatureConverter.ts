@@ -1,5 +1,3 @@
-import { BaseUtilityArtifact } from "@/Common/Utils/BaseUtilityArtifact";
-
 type ConvertTempDto = {
   temperature: number;
   unit: "fahrenheit" | "celsius";
@@ -10,27 +8,33 @@ type ConvertTempReturnType = {
   fahrenheit: number;
 };
 
-export class TemperatureConverter extends BaseUtilityArtifact {
+export class TemperatureConverter {
   public static convert(convertTempDto: ConvertTempDto): ConvertTempReturnType {
     const { unit, temperature } = convertTempDto;
+
+    const cleanedTemperature = this.#roundNumber(temperature);
 
     return {
       celsius:
         unit == "celsius"
-          ? temperature
-          : this.convertFahrenheitToCelsius(temperature),
+          ? cleanedTemperature
+          : this.#convertFahrenheitToCelsius(cleanedTemperature),
       fahrenheit:
         unit == "fahrenheit"
-          ? temperature
-          : this.convertCelsiusToFahrenheit(temperature),
+          ? cleanedTemperature
+          : this.#convertCelsiusToFahrenheit(cleanedTemperature),
     };
   }
 
-  private static convertCelsiusToFahrenheit(temperature: number): number {
-    return 1;
+  static #convertCelsiusToFahrenheit(temperature: number): number {
+    return this.#roundNumber((temperature * 9) / 5 + 32);
   }
 
-  private static convertFahrenheitToCelsius(temperature: number): number {
-    return 1;
+  static #convertFahrenheitToCelsius(temperature: number): number {
+    return this.#roundNumber(((temperature - 32) * 5) / 9);
+  }
+
+  static #roundNumber(num: number): number {
+    return num % 1 ? num : parseFloat(num.toFixed(1));
   }
 }

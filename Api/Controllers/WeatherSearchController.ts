@@ -11,6 +11,8 @@ import { WanderWeatherApiClient } from "@/Infra/External/WanderWeatherApiClient"
 import { SqliteCacheDriver } from "@/Services/Caching/SqliteCacheDriver";
 
 import { Request, Response } from "express";
+import Database from "@/Infra/Database";
+import HttpClient from "@/Common/Utils/HttpClient";
 
 class WeatherSearchController {
   public async handle(request: Request, response: Response) {
@@ -19,7 +21,9 @@ class WeatherSearchController {
 
       Logger.debug({ location, date });
 
-      const { err, data } = await WanderWeatherApiClient.weatherSearch({
+      const { err, data } = await new WanderWeatherApiClient(
+        new HttpClient(),
+      ).weatherSearch({
         city: location,
         date,
       });
@@ -34,7 +38,7 @@ class WeatherSearchController {
 
       const tempInfo = TemperatureConverter.convert(data);
 
-      const cacheDriver = new SqliteCacheDriver();
+      const cacheDriver = new SqliteCacheDriver(Database);
 
       await cacheDriver.set(
         cacheDriver.keyFrom({

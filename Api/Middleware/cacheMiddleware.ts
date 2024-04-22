@@ -3,6 +3,7 @@ import { SqliteCacheDriver } from "@/Services/Caching/SqliteCacheDriver";
 import { NULL_OBJECT, SUCCESS, TEMPERATURE_RETRIEVED } from "@/Common/Messages";
 import { HttpStatusCodeEnum } from "@/Common/Utils";
 import { Middleware } from "@/TypeChecking/Api/Middleware";
+import Database from "@/Infra/Database";
 
 export const cacheMiddleware: Middleware = async (
   request: Request,
@@ -11,7 +12,7 @@ export const cacheMiddleware: Middleware = async (
 ) => {
   const { date, location } = request.body;
 
-  const cacheDriver = new SqliteCacheDriver();
+  const cacheDriver = new SqliteCacheDriver(Database);
 
   const cacheObject = await cacheDriver.get(
     cacheDriver.keyFrom({

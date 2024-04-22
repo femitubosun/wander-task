@@ -1,8 +1,7 @@
 import { HttpStatusCodeEnum } from "@/Common/Utils";
-import { BaseUtilityArtifact } from "@/Common/Utils/BaseUtilityArtifact";
 import { HttpClient } from "@/Common/Utils/HttpClient";
 import { appConfig } from "@/Config";
-import { NULL_OBJECT } from "@/Common/Messages";
+import { ERROR_PROCESSING_REQUEST_TRY_AGAIN } from "@/Common/Messages";
 import { Logger } from "@/Common/Utils/Logger";
 
 type WeatherSearchDto = {
@@ -26,12 +25,14 @@ type WeatherSearchReturnType =
       data: null;
     };
 
-export class WanderWeatherApiClient extends BaseUtilityArtifact {
-  public static async weatherSearch(
+export class WanderWeatherApiClient {
+  constructor(private httpClient: HttpClient) {}
+
+  public async weatherSearch(
     weatherSearchDto: WeatherSearchDto,
   ): Promise<WeatherSearchReturnType> {
     try {
-      const { apiResponse } = await HttpClient.post({
+      const { apiResponse } = await this.httpClient.post({
         endpointUrl: appConfig.WEATHER_API_URL,
         dataPayload: weatherSearchDto,
       });
@@ -48,14 +49,14 @@ export class WanderWeatherApiClient extends BaseUtilityArtifact {
     }
   }
 
-  static #handleError(error: any) {
+  #handleError(error: any) {
     Logger.error(error);
 
-    if (error.response === NULL_OBJECT) {
+    if (!error.response) {
       return {
         err: {
           statusCode: HttpStatusCodeEnum.INTERNAL_SERVER_ERROR,
-          message: "Internal Server Error",
+          message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
         },
         data: null,
       };
@@ -66,12 +67,12 @@ export class WanderWeatherApiClient extends BaseUtilityArtifact {
 
     Logger.error(apiResponse);
 
-    if (statusCode === HttpStatusCodeEnum.BAD_REQUEST) {
+    if (statusCode === HttpStatusCodeEnum.TOO_MANY_REQUESTS) {
       return {
         err: {
           statusCode,
           message:
-            apiResponse.data.error ?? "Invalid Data. Please Check your input",
+            "You are doing that too quickly. Please wait a few seconds before trying again",
         },
         data: null,
       };
@@ -81,15 +82,15 @@ export class WanderWeatherApiClient extends BaseUtilityArtifact {
       return {
         err: {
           statusCode: 500,
-          message: "Internal Server Error. Please try again Later",
+          message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
         },
         data: null,
       };
     }
 
     if (
-      error.response.status === HttpStatusCodeEnum.INTERNAL_SERVER_ERROR &&
-      apiResponse.data.error.includes("invalid_date")
+      statusCode === HttpStatusCodeEnum.INTERNAL_SERVER_ERROR &&
+      apiResponse.data?.error?.includes("invalid_date")
     ) {
       return {
         err: {
@@ -101,8 +102,8 @@ export class WanderWeatherApiClient extends BaseUtilityArtifact {
     }
 
     if (
-      error.response.status === HttpStatusCodeEnum.INTERNAL_SERVER_ERROR &&
-      apiResponse.data.error.includes("(reading 'length')")
+      statusCode === HttpStatusCodeEnum.INTERNAL_SERVER_ERROR &&
+      apiResponse.data?.error?.includes("(reading 'length')")
     ) {
       return {
         err: {
@@ -113,10 +114,21 @@ export class WanderWeatherApiClient extends BaseUtilityArtifact {
       };
     }
 
+    if (statusCode === HttpStatusCodeEnum.BAD_REQUEST) {
+      return {
+        err: {
+          statusCode,
+          message:
+            apiResponse.data?.error ?? "Invalid Data. Please Check your input",
+        },
+        data: null,
+      };
+    }
+
     return {
       err: {
         statusCode,
-        message: "Internal Server Error. Please Try again later",
+        message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
       },
       data: null,
     };

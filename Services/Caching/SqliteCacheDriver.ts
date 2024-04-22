@@ -4,9 +4,11 @@ import { WeatherCacheObject } from "@/Services/Caching/WeatherCacheObject";
 import { Logger } from "@/Common/Utils/Logger";
 
 export class SqliteCacheDriver implements ICacheDriver {
+  constructor(private databaseDriver: typeof Database) {}
+
   public async get(key: string): Promise<WeatherCacheObject | null> {
     try {
-      const result = await Database.weatherCache!.findUnique({
+      const result = await this.databaseDriver.weatherCache!.findUnique({
         where: { cacheKey: key },
       });
 
@@ -21,14 +23,12 @@ export class SqliteCacheDriver implements ICacheDriver {
 
   public async set(key: string, value: string): Promise<boolean> {
     try {
-      const res = await Database.weatherCache.create({
+      await this.databaseDriver.weatherCache.create({
         data: {
           cacheKey: key,
           weatherData: value,
         },
       });
-
-      if (!res) return false;
 
       return true;
     } catch (error: any) {
@@ -40,7 +40,7 @@ export class SqliteCacheDriver implements ICacheDriver {
 
   public async delete(key: string) {
     try {
-      await Database.weatherCache.delete({
+      await this.databaseDriver.weatherCache.delete({
         where: {
           cacheKey: key,
         },
@@ -55,6 +55,7 @@ export class SqliteCacheDriver implements ICacheDriver {
   }
 
   public keyFrom(options: { location: string; date: string }) {
-    return `${options.location.toLowerCase()}${options.date}`;
+    const cleanedLocation = options.location.replace(/\s/g, "").toLowerCase();
+    return `${cleanedLocation}${options.date}`;
   }
 }

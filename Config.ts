@@ -6,8 +6,6 @@ const envFound = dotenv.config({
   path: path.join(__dirname, ".env"),
 });
 
-console.log(__dirname);
-
 if (envFound.error) throw new Error("ENV_NOT_FOUND_ERROR");
 
 export const appConfig = {
