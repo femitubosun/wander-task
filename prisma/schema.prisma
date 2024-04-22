@@ -1,0 +1,19 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["darwin-arm64", "linux-arm64-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./app.cache"
+}
+
+model WeatherCache {
+  id          Int      @id @default(autoincrement())
+  cacheKey    String   @unique
+  weatherData String
+  createdAt   DateTime @default(now())
+}
