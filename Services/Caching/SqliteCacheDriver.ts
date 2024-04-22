@@ -5,31 +5,34 @@ import { appConfig } from "@/Config";
 import { CacheRow } from "@/TypeChecking/Cache/CacheRow";
 import { WeatherCacheObject } from "@/Services/Caching/WeatherCacheObject";
 import { Logger } from "@/Common/Utils/Logger";
+import * as console from "node:console";
 
 export class SqliteCacheDriver implements ICacheDriver {
   public async get(key: string): Promise<WeatherCacheObject | null> {
     try {
-      const result = await Database.cursor!.get<CacheRow>(
-        `SELECT weather_data, created_at
-           FROM ${appConfig.CACHE.CACHE_TABLE_NAME}
-           WHERE cache_key = ?`,
-        key,
-      );
+      const result = await Database.weatherCache!.findUnique({
+        where: { cacheKey: key },
+      });
 
       if (!result) return null;
+
       return WeatherCacheObject.fromRow(this, key, result);
     } catch (error: any) {
       Logger.error(error);
       return null;
     }
   }
+
   public async set(key: string, value: string): Promise<boolean> {
     try {
-      const query = `
-        INSERT INTO ${appConfig.CACHE.CACHE_TABLE_NAME} (cache_key, weather_data)
-        VALUES ('${key}', '${value}')
-    `;
-      await Database.cursor!.run(query);
+      const res = await Database.weatherCache.create({
+        data: {
+          cacheKey: key,
+          weatherData: value,
+        },
+      });
+
+      if (!res) return false;
 
       return true;
     } catch (error: any) {
@@ -41,17 +44,13 @@ export class SqliteCacheDriver implements ICacheDriver {
 
   public async delete(key: string) {
     try {
-      const query = `
-        DELETE FROM ${appConfig.CACHE.CACHE_TABLE_NAME}
-        WHERE cache_key = ?
-    `;
+      const result = await Database.weatherCache.delete({
+        where: {
+          cacheKey: key,
+        },
+      });
 
-      const result = await Database.cursor!.run(query, [key]);
-
-      if (!result.changes || result.changes <= 0) {
-        return false;
-      }
-      return false;
+      return true;
     } catch (error: any) {
       Logger.error(error);
 

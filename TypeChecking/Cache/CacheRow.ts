@@ -1,4 +1,6 @@
 export type CacheRow = {
-  weather_data: string;
-  created_at: string;
+  id: number;
+  cacheKey: string;
+  weatherData: string;
+  createdAt: Date;
 };

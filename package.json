@@ -5,7 +5,9 @@
   "main": "bootstrap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsc && node dist/index.js",
+    "build": "tsc && resolve-tspaths",
+    "prod": "node dist/bootstrap.js",
+    "start": "ts-node --transpile-only -r tsconfig-paths/register ./bootstrap.ts",
     "dev": "ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
   },
   "keywords": [
@@ -15,22 +17,24 @@
   "author": "Femi Olatubosun",
   "license": "ISC",
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.10",
     "@types/express": "^4.17.21",
     "@types/luxon": "^3.4.2",
     "@types/module-alias": "^2.0.4",
     "module-alias": "^2.2.3",
     "prettier": "^3.2.5",
+    "prisma": "^5.12.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@prisma/client": "^5.12.1",
+    "@types/better-sqlite3": "^7.6.10",
     "@types/cors": "^2.8.17",
     "@types/node": "^20.12.7",
-    "@types/sqlite3": "^3.1.11",
     "axios": "^1.6.8",
+    "better-sqlite3": "^9.5.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -39,7 +43,6 @@
     "helmet": "^7.1.0",
     "luxon": "^3.4.4",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
     "winston": "^3.13.0"
   },
   "_moduleAliases": {

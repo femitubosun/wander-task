@@ -13,12 +13,12 @@ export const cacheMiddleware: Middleware = async (
 
   const cacheDriver = new SqliteCacheDriver();
 
-  const cacheKey = cacheDriver.keyFrom({
-    location,
-    date,
-  });
-
-  const cacheObject = await cacheDriver.get(cacheKey);
+  const cacheObject = await cacheDriver.get(
+    cacheDriver.keyFrom({
+      location,
+      date,
+    }),
+  );
 
   if (cacheObject === NULL_OBJECT) {
     return next();

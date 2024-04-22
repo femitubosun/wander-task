@@ -6,7 +6,7 @@ import { ICacheDriver } from "@/TypeChecking/Cache/ICacheDriver";
 type WeatherCacheObjectOptions = {
   key: string;
   value: string;
-  createdAt: string;
+  createdAt: Date;
   cacheDriver: ICacheDriver;
 };
 
@@ -17,10 +17,10 @@ export class WeatherCacheObject {
     const currentDateTime = appConfig.CURRENT_DATE_TIME;
 
     const cacheExpirationOffset = currentDateTime.minus({
-      minutes: appConfig.cacheConfig.EXPIRE_AFTER_MINUTES,
+      minutes: appConfig.CACHE.EXPIRE_AFTER_MINUTES,
     });
 
-    const cacheCreatedAt = DateTime.fromSeconds(Number(this.options.createdAt));
+    const cacheCreatedAt = DateTime.fromJSDate(this.options.createdAt);
 
     return cacheCreatedAt < cacheExpirationOffset;
   }
@@ -32,8 +32,8 @@ export class WeatherCacheObject {
   public static fromRow(cacheDriver: ICacheDriver, key: string, row: CacheRow) {
     return new WeatherCacheObject({
       key,
-      value: row.weather_data,
-      createdAt: row.created_at,
+      value: row.weatherData,
+      createdAt: row.createdAt,
       cacheDriver,
     });
   }
