@@ -24,9 +24,12 @@ const validator = [
     }),
   body("location")
     .isString()
+    .isLength({
+      min: 1,
+    })
     .trim()
     .escape()
-    .withMessage("Location should be a valid string"),
+    .withMessage("Location should be a valid string of at least length 1"),
 ];
 
 export default validator;

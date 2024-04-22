@@ -11,15 +11,18 @@ import Database from "../../Infra/Database";
 
 const app = new Express().app;
 
-describe("API Integration Test", () => {
+describe("Weather Search API Integration Test", () => {
+  const WeatherApi = request(app);
+
   beforeEach(async () => {
     await ResetDb();
   });
 
   it("should return weather data for a valid request", async () => {
-    const response = await request(app)
-      .post("/Search")
-      .send({ location: "London", date: "2024-04-22" });
+    const response = await WeatherApi.post("/Search").send({
+      location: "London",
+      date: "2024-04-22",
+    });
 
     if (response.statusCode !== HttpStatusCodeEnum.OK) {
       console.log("Test skipped because server did not return OK");
@@ -42,8 +45,7 @@ describe("API Integration Test", () => {
     it("should return an 422 for an missing location", async () => {
       const expectedResponseCode = HttpStatusCodeEnum.UNPROCESSABLE_ENTITY;
 
-      const response = await request(app)
-        .post("/Search")
+      const response = await WeatherApi.post("/Search")
         .send({ date: "2024-04-22" })
         .expect(expectedResponseCode);
 
@@ -58,8 +60,7 @@ describe("API Integration Test", () => {
     it("should return a 422 for non ISO date", async () => {
       const expectedResponseCode = HttpStatusCodeEnum.UNPROCESSABLE_ENTITY;
 
-      const response = await request(app)
-        .post("/Search")
+      const response = await WeatherApi.post("/Search")
         .send({ date: "2024x", location: "NYC" })
         .expect(expectedResponseCode);
 
@@ -78,8 +79,7 @@ describe("API Integration Test", () => {
     it("should return a 422 for a future date", async () => {
       const expectedResponseCode = HttpStatusCodeEnum.UNPROCESSABLE_ENTITY;
 
-      const response = await request(app)
-        .post("/Search")
+      const response = await WeatherApi.post("/Search")
         .send({ date: "2027", location: "NYC" })
         .expect(expectedResponseCode);
 
@@ -100,9 +100,10 @@ describe("API Integration Test", () => {
     it("should cache results that are new", async () => {
       const cacheCount = await prisma.weatherCache.count();
 
-      const response = await request(app)
-        .post("/Search")
-        .send({ date: "2017-15-12", location: "NYC" });
+      const response = await WeatherApi.post("/Search").send({
+        date: "2017-15-12",
+        location: "NYC",
+      });
 
       if (response.statusCode !== HttpStatusCodeEnum.OK) {
         return;
@@ -113,7 +114,7 @@ describe("API Integration Test", () => {
       expect(cacheCount + 1).toEqual(newCacheCount);
     });
 
-    it("should delete expired cache object", async () => {
+    it("should set expired cache object isExpired to true", async () => {
       const requestData = { location: "NYC", date: "2004-04-22" };
 
       const cacheKey = new SqliteCacheDriver(Database).keyFrom(requestData);
@@ -128,9 +129,10 @@ describe("API Integration Test", () => {
         },
       });
 
-      const response = await request(app)
-        .post("/Search")
-        .send({ location: "NYC", date: "2004-04-22" });
+      const response = await WeatherApi.post("/Search").send({
+        location: "NYC",
+        date: "2004-04-22",
+      });
 
       if (response.statusCode !== HttpStatusCodeEnum.OK) {
         console.log(
@@ -141,6 +143,9 @@ describe("API Integration Test", () => {
       }
 
       const newCache = await prisma.weatherCache.findFirst({
+        where: {
+          cacheKey,
+        },
         orderBy: {
           cacheKey: "desc",
         },
@@ -153,9 +158,10 @@ describe("API Integration Test", () => {
     });
 
     it("should have low latency for cached results", async () => {
-      let response = await request(app)
-        .post("/Search")
-        .send({ location: "NYC", date: "2004-04-22" });
+      let response = await WeatherApi.post("/Search").send({
+        location: "NYC",
+        date: "2004-04-22",
+      });
 
       if (response.statusCode !== HttpStatusCodeEnum.OK) {
         console.log(
@@ -167,9 +173,10 @@ describe("API Integration Test", () => {
 
       const startTime = performance.now();
 
-      response = await request(app)
-        .post("/Search")
-        .send({ location: "NYC", date: "2004-04-22" });
+      response = await WeatherApi.post("/Search").send({
+        location: "NYC",
+        date: "2004-04-22",
+      });
 
       const endTime = performance.now();
 
@@ -183,7 +190,7 @@ describe("API Integration Test", () => {
 
       const elapsedTime = endTime - startTime;
 
-      const threshold = 100;
+      const threshold = 50;
 
       expect(elapsedTime).toBeLessThan(threshold);
     });
@@ -191,9 +198,10 @@ describe("API Integration Test", () => {
 
   describe("Error Handling", () => {
     it("should return an error if 3rd party service returns an error", async () => {
-      let response = await request(app)
-        .post("/Search")
-        .send({ location: "NYC", date: "2004-04-22" });
+      let response = await WeatherApi.post("/Search").send({
+        location: "NYC",
+        date: "2004-04-22",
+      });
 
       if (response.statusCode === HttpStatusCodeEnum.OK) {
         console.log(

@@ -15,7 +15,7 @@ export const appConfig = {
 
   CACHE: {
     EXPIRE_AFTER_MINUTES:
-      parseInt(process.env["EXPIRE_AFTER_MINUTES"], 10) || 60,
+      parseInt(process.env["CACHE_EXPIRE_AFTER_MINUTES"], 10) || 60,
     DB_URL: process.env["CACHE_DB_URL"],
     CACHE_TABLE_NAME: process.env["CACHE_TABLE_NAME"],
   },

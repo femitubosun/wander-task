@@ -6,10 +6,31 @@ import { Logger } from "@/Common/Utils/Logger";
 export class SqliteCacheDriver implements ICacheDriver {
   constructor(private databaseDriver: typeof Database) {}
 
-  public async get(key: string): Promise<WeatherCacheObject | null> {
+  public async getActive(key: string): Promise<WeatherCacheObject | null> {
     try {
-      const result = await this.databaseDriver.weatherCache!.findUnique({
-        where: { cacheKey: key },
+      const result = await this.databaseDriver.weatherCache!.findFirst({
+        where: { cacheKey: key, isExpired: false },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (!result) return null;
+
+      return WeatherCacheObject.fromRow(this, key, result);
+    } catch (error: any) {
+      Logger.error(error);
+      return null;
+    }
+  }
+
+  public async getExpired(key: string): Promise<WeatherCacheObject | null> {
+    try {
+      const result = await this.databaseDriver.weatherCache!.findFirst({
+        where: { cacheKey: key, isExpired: true },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       if (!result) return null;
@@ -38,11 +59,29 @@ export class SqliteCacheDriver implements ICacheDriver {
     }
   }
 
-  public async delete(key: string) {
+  public async expire(id: number) {
     try {
-      await this.databaseDriver.weatherCache.delete({
+      const oldestExpired = await this.databaseDriver.weatherCache.findFirst({
         where: {
-          cacheKey: key,
+          id,
+          isExpired: true,
+        },
+      });
+
+      if (oldestExpired) {
+        await this.databaseDriver.weatherCache.delete({
+          where: {
+            id: oldestExpired.id,
+          },
+        });
+      }
+
+      await this.databaseDriver.weatherCache.update({
+        where: {
+          id,
+        },
+        data: {
+          isExpired: true,
         },
       });
 

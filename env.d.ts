@@ -5,7 +5,7 @@ declare global {
       PORT: string;
       CACHE_DB_URL: string;
       CACHE_TABLE_NAME: string;
-      EXPIRE_AFTER_MINUTES: string;
+      CACHE_EXPIRE_AFTER_MINUTES: string;
     }
   }
 }

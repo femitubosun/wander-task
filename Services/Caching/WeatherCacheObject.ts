@@ -4,8 +4,10 @@ import { DateTime } from "luxon";
 import { ICacheDriver } from "@/TypeChecking/Cache/ICacheDriver";
 
 type WeatherCacheObjectOptions = {
+  id: number;
   key: string;
   value: string;
+  isExpired: boolean;
   createdAt: Date;
   cacheDriver: ICacheDriver;
 };
@@ -25,15 +27,17 @@ export class WeatherCacheObject {
     return cacheCreatedAt < cacheExpirationOffset;
   }
 
-  public async delete(): Promise<void> {
-    await this.options.cacheDriver.delete(this.options.key);
+  public async expire(): Promise<void> {
+    await this.options.cacheDriver.expire(this.options.id);
   }
 
   public static fromRow(cacheDriver: ICacheDriver, key: string, row: CacheRow) {
     return new WeatherCacheObject({
       key,
+      id: row.id,
       value: row.weatherData,
       createdAt: row.createdAt,
+      isExpired: row.isExpired,
       cacheDriver,
     });
   }

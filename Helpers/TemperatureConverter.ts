@@ -12,15 +12,17 @@ export class TemperatureConverter {
   public static convert(convertTempDto: ConvertTempDto): ConvertTempReturnType {
     const { unit, temperature } = convertTempDto;
 
+    const roundedTemp = this.#roundNumber(temperature);
+
     return {
       celsius:
         unit == "celsius"
-          ? temperature
-          : this.#convertFahrenheitToCelsius(temperature),
+          ? roundedTemp
+          : this.#convertFahrenheitToCelsius(roundedTemp),
       fahrenheit:
         unit == "fahrenheit"
-          ? temperature
-          : this.#convertCelsiusToFahrenheit(temperature),
+          ? roundedTemp
+          : this.#convertCelsiusToFahrenheit(roundedTemp),
     };
   }
 

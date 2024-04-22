@@ -14,9 +14,17 @@ const customWinstonFormat = winston.format.printf(
 );
 
 export const Logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    customWinstonFormat,
-  ),
-  transports: [new winston.transports.Console()],
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        customWinstonFormat,
+      ),
+    }),
+    new winston.transports.File({
+      level: "error",
+      filename: "logs/logsErrors",
+      format: winston.format.simple(),
+    }),
+  ],
 });

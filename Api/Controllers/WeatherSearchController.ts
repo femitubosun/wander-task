@@ -1,5 +1,7 @@
 import {
   ERROR,
+  OUTDATED_TEMPERATURE_RETRIEVED,
+  NULL_OBJECT,
   SOMETHING_WENT_WRONG,
   SUCCESS,
   TEMPERATURE_RETRIEVED,
@@ -19,8 +21,6 @@ class WeatherSearchController {
     try {
       const { location, date } = request.body;
 
-      Logger.debug({ location, date });
-
       const { err, data } = await new WanderWeatherApiClient(
         new HttpClient(),
       ).weatherSearch({
@@ -28,7 +28,21 @@ class WeatherSearchController {
         date,
       });
 
-      if (err !== null) {
+      const cacheDriver = new SqliteCacheDriver(Database);
+      const cacheKey = cacheDriver.keyFrom({ location, date });
+
+      if (err !== NULL_OBJECT) {
+        const expiredCache = await cacheDriver.getExpired(cacheKey);
+
+        if (expiredCache !== NULL_OBJECT) {
+          return response.status(HttpStatusCodeEnum.OK).json({
+            statusCode: HttpStatusCodeEnum.OK,
+            status: SUCCESS,
+            message: OUTDATED_TEMPERATURE_RETRIEVED,
+            results: expiredCache.data,
+          });
+        }
+
         return response.status(err.statusCode).json({
           statusCode: err.statusCode,
           status: ERROR,
@@ -37,8 +51,6 @@ class WeatherSearchController {
       }
 
       const tempInfo = TemperatureConverter.convert(data);
-
-      const cacheDriver = new SqliteCacheDriver(Database);
 
       await cacheDriver.set(
         cacheDriver.keyFrom({

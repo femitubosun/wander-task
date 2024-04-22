@@ -14,7 +14,7 @@ export const cacheMiddleware: Middleware = async (
 
   const cacheDriver = new SqliteCacheDriver(Database);
 
-  const cacheObject = await cacheDriver.get(
+  const cacheObject = await cacheDriver.getActive(
     cacheDriver.keyFrom({
       location,
       date,
@@ -26,7 +26,7 @@ export const cacheMiddleware: Middleware = async (
   }
 
   if (cacheObject.hasExpired()) {
-    await cacheObject.delete();
+    await cacheObject.expire();
 
     return next();
   }

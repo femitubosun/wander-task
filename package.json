@@ -6,10 +6,10 @@
   "scripts": {
     "test": "jest --coverage --testPathPattern='\\.unit\\.test\\.ts$'",
     "test:integration": "./Scripts/run-integration.sh",
+    "migrate": "npx prisma migrate dev",
     "build": "tsc && resolve-tspaths",
-    "prod": "node dist/bootstrap.js",
-    "start": "ts-node --transpile-only -r tsconfig-paths/register ./bootstrap.ts",
-    "dev": "ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
+    "start": "npx prisma migrate dev; ts-node --transpile-only -r tsconfig-paths/register ./bootstrap.ts",
+    "dev": "npx prisma migrate dev; ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
   },
   "keywords": [
     "Caching",

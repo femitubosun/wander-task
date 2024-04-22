@@ -13,7 +13,10 @@ datasource db {
 
 model WeatherCache {
   id          Int      @id @default(autoincrement())
-  cacheKey    String   @unique
+  cacheKey    String
   weatherData String
+  isExpired   Boolean  @default(false)
   createdAt   DateTime @default(now())
+
+  @@index([cacheKey, isExpired])
 }

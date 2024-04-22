@@ -5,15 +5,17 @@ import { CacheRow } from "../../TypeChecking/Cache/CacheRow";
 import { mock } from "jest-mock-extended";
 
 describe("WeatherCacheObject", () => {
-  describe("hasExpired ", () => {
+  describe("hasExpired", () => {
     it("should return true if cache has expired", () => {
       const cacheCreatedAt = DateTime.now().minus({ minutes: 61 });
 
       const mockCacheDriver = mock<ICacheDriver>();
 
       const cacheObject = new WeatherCacheObject({
+        id: 1,
         key: "testKey",
         value: "testValue",
+        isExpired: false,
         createdAt: cacheCreatedAt.toJSDate(),
         cacheDriver: mockCacheDriver,
       });
@@ -26,8 +28,10 @@ describe("WeatherCacheObject", () => {
       const mockCacheDriver = mock<ICacheDriver>();
 
       const cacheObject = new WeatherCacheObject({
+        id: 1,
         key: "testKey",
         value: "testValue",
+        isExpired: false,
         createdAt: cacheCreatedAt.toJSDate(),
         cacheDriver: mockCacheDriver,
       });
@@ -41,15 +45,17 @@ describe("WeatherCacheObject", () => {
       const mockCacheDriver = mock<ICacheDriver>();
 
       const cacheObject = new WeatherCacheObject({
+        id: 1,
         key: "testKey",
-        value: '{"celsius": -40, "fahrenheit": -40}',
+        value: "testValue",
+        isExpired: false,
         createdAt: new Date(),
         cacheDriver: mockCacheDriver,
       });
 
-      await cacheObject.delete();
+      await cacheObject.expire();
 
-      expect(mockCacheDriver.delete).toHaveBeenCalledWith("testKey");
+      expect(mockCacheDriver.expire).toHaveBeenCalledWith(1);
     });
   });
 
@@ -60,6 +66,7 @@ describe("WeatherCacheObject", () => {
       const row: CacheRow = {
         id: 1,
         cacheKey: "testKey",
+        isExpired: false,
         weatherData: '{"celsius": -40, "fahrenheit": -40}',
         createdAt: new Date(),
       };
@@ -85,6 +92,7 @@ describe("WeatherCacheObject", () => {
       const row: CacheRow = {
         id: 1,
         cacheKey: "testKey",
+        isExpired: false,
         weatherData: '{"celsius": -40, "fahrenheit": -40}',
         createdAt: new Date(),
       };
