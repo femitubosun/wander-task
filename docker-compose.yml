@@ -30,5 +30,7 @@ services:
       FAILED_JOB_RETRY_DELAY: 2000
     volumes:
       - .:/app
+      - /app/node_modules/
+      - /app/dist
     depends_on:
       - redis

@@ -34,5 +34,3 @@ export const appConfig = {
     return DateTime.now();
   },
 };
-
-console.log({ appConfig });

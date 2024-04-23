@@ -164,3 +164,8 @@ as `FAILED_JOB_RETRIES`.
 |-------------------------|--------------|
 | Unit                    | 98.62        |
 | Integration(Controller) | 93.1         |
+
+## Thoughts
+
+Logically, archived weather should not expire, so in a real world scenario, invalidating the cache might not be needed.
+But I suppose the hypothetical scenario is framed to maximize technical implementation.
