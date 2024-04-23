@@ -81,7 +81,7 @@ export class WanderWeatherApiClient {
     if (statusCode === HttpStatusCodeEnum.TEA_POT) {
       return {
         err: {
-          statusCode: 500,
+          statusCode: HttpStatusCodeEnum.INTERNAL_SERVER_ERROR,
           message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
         },
         data: null,
@@ -94,7 +94,7 @@ export class WanderWeatherApiClient {
     ) {
       return {
         err: {
-          statusCode: 400,
+          statusCode: HttpStatusCodeEnum.BAD_REQUEST,
           message: "Invalid Date. Check your input",
         },
         data: null,

@@ -4,6 +4,25 @@ import { HttpStatusCodeEnum } from "@/Common/Utils";
 import { ERROR_PROCESSING_REQUEST_TRY_AGAIN } from "@/Common/Messages";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 
+jest.mock("winston", () => ({
+  createLogger: jest.fn().mockReturnValue({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    verbose: jest.fn(),
+  }),
+  format: {
+    printf: jest.fn(),
+    combine: jest.fn(),
+    timestamp: jest.fn(),
+    simple: jest.fn(),
+  },
+  transports: {
+    Console: jest.fn(),
+    File: jest.fn(),
+  },
+}));
+
 describe("WanderWeatherApiClient", () => {
   let mockHttpClient: DeepMockProxy<HttpClient>;
   let weatherApiClient: WanderWeatherApiClient;

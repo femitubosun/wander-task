@@ -9,6 +9,25 @@ import { appConfig } from "../../Config";
 import { SqliteCacheDriver } from "../../Services/Caching/SqliteCacheDriver";
 import Database from "../../Infra/Database";
 
+jest.mock("winston", () => ({
+  createLogger: jest.fn().mockReturnValue({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    verbose: jest.fn(),
+  }),
+  format: {
+    printf: jest.fn(),
+    combine: jest.fn(),
+    timestamp: jest.fn(),
+    simple: jest.fn(),
+  },
+  transports: {
+    Console: jest.fn(),
+    File: jest.fn(),
+  },
+}));
+
 const app = new Express().app;
 
 describe("Weather Search API Integration Test", () => {
