@@ -24,10 +24,10 @@ class WeatherSearchController {
 
       const cacheDriver = new SqliteCacheDriver(Database);
       const cacheKey = cacheDriver.keyFrom({ location, date });
-
       const httpClient = new HttpClient();
+
       const { err, data } = await new WanderWeatherApiClient(
-        httpClient,
+        httpClient
       ).weatherSearch({
         city: location,
         date,

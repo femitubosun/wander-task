@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 import dotenv from "dotenv";
-import path from "path";
 
 const envFound = dotenv.config();
 
@@ -16,7 +15,7 @@ export const appConfig = {
     CACHE_TABLE_NAME: process.env["CACHE_TABLE_NAME"],
   },
   QUEUE: {
-    REDIS_QUEUE_HOST: process.env.REDIS_QUEUE_HOST || "localhost",
+    REDIS_QUEUE_HOST: process.env.NODE_ENV === "test" ? "localhost" : "redis",
     REDIS_QUEUE_PORT: process.env.REDIS_QUEUE_PORT
       ? parseInt(process.env.REDIS_QUEUE_PORT)
       : 6379,

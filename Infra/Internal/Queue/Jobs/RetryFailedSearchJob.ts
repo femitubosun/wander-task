@@ -1,12 +1,16 @@
-import { Processor } from "bullmq";
+import { Job, Processor } from "bullmq";
 import { WanderWeatherApiClient } from "@/Infra/External/WanderWeatherApiClient";
 import HttpClient from "@/Common/Utils/HttpClient";
 import { Logger } from "@/Common/Utils/Logger";
 import { TemperatureConverter } from "@/Helpers/TemperatureConverter";
 import { SqliteCacheDriver } from "@/Services/Caching/SqliteCacheDriver";
 import Database from "@/Infra/Database";
+import {
+  RETRY_FAILED_SEARCH_FAILED,
+  RETRY_FAILED_SEARCH_SUCCESSFUL,
+} from "@/Common/Messages";
 
-const func: Processor = async (job: any): Promise<void> => {
+const job: Processor = async (job: Job): Promise<void> => {
   const { date, location } = job.data;
 
   const httpClient = new HttpClient();
@@ -19,9 +23,9 @@ const func: Processor = async (job: any): Promise<void> => {
   });
 
   if (err !== null) {
-    Logger.error("Search Retry Failed");
+    Logger.error(RETRY_FAILED_SEARCH_FAILED);
 
-    throw new Error("Could not Retry Failed Search Successfully");
+    throw new Error(RETRY_FAILED_SEARCH_FAILED);
   }
 
   const tempInfo = TemperatureConverter.convert(data);
@@ -31,7 +35,7 @@ const func: Processor = async (job: any): Promise<void> => {
 
   await cacheDriver.set(cacheKey, JSON.stringify(tempInfo));
 
-  Logger.info("Failed Search Completed Successfully");
+  Logger.info(RETRY_FAILED_SEARCH_SUCCESSFUL);
 };
 
-export default func;
+export default job;

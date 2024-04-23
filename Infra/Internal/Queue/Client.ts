@@ -1,7 +1,7 @@
 import { failedSearchQueue, queueConfig } from "@/Infra/Internal/Queue/Config";
 import { Worker } from "bullmq";
 import { appConfig } from "@/Config";
-import RetryFailedSearch from "@/Infra/Internal/Queue/Jobs/RetryFailedSearch";
+import RetryFailedSearch from "@/Infra/Internal/Queue/Jobs/RetryFailedSearchJob";
 
 export class QueueClient {
   static failedSearch = {

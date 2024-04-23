@@ -20,3 +20,8 @@ export const ERROR_PROCESSING_REQUEST_TRY_AGAIN =
 
 /* ----------------------------------- Object States  ------------------------------*/
 export const NULL_OBJECT = null;
+
+export const RETRY_FAILED_SEARCH_SUCCESSFUL =
+  "Retry Failed Search Job Completed Successfully";
+
+export const RETRY_FAILED_SEARCH_FAILED = "Retry Failed Search Job Failed";
