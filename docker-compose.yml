@@ -21,6 +21,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=PRODUCTION
+      - CACHE_DB_URL=file:./app.cache
     volumes:
       - .:/app
     depends_on:

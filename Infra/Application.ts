@@ -1,8 +1,8 @@
 import { Logger } from "@/Common/Utils/Logger";
 import { Express } from "./Express";
 import { appConfig } from "@/Config";
-import { Job, Worker } from "bullmq";
-import RetryFailedSearch from "@/Jobs/RetryFailedSearch";
+import { Job } from "bullmq";
+import { QueueClient } from "@/Infra/Internal/Queue/Client";
 
 export class Application {
   constructor(private express: Express) {
@@ -16,28 +16,19 @@ export class Application {
   }
 
   #setupQueueWorker() {
-    const worker = new Worker(
-      appConfig.QUEUE.FAILED_SEARCH_QUEUE_NAME,
-      RetryFailedSearch,
-      {
-        connection: {
-          host: appConfig.QUEUE.REDIS_QUEUE_HOST,
-          port: appConfig.QUEUE.REDIS_QUEUE_PORT,
-        },
-        autorun: true,
-        runRetryDelay: appConfig.QUEUE.FAILED_JOB_RETRY_DELAY,
-      },
-    );
+    const worker = QueueClient.failedSearch.createWorker();
 
     worker.on("completed", (job: Job) => {
       Logger.info(`Completed job with id ${job.id}`);
     });
 
     worker.on("active", (job: Job<unknown>) => {
-      Logger.info(`Completed job with id ${job.id}`);
+      Logger.info(`Running job with id ${job.id}`);
     });
     worker.on("error", (failedReason: Error) => {
       Logger.error(`Job encountered an error`, failedReason);
     });
+
+    Logger.info(`Queue Initialized ⚙️`);
   }
 }

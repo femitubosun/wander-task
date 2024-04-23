@@ -35,6 +35,6 @@ export class TemperatureConverter {
   }
 
   static #roundNumber(num: number): number {
-    return Math.round(num * 10) / 10;
+    return Math.round(num * 100) / 100;
   }
 }

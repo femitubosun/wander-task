@@ -1,4 +1,4 @@
-import { Queue, Job, JobsOptions } from "bullmq";
+import { JobsOptions, Queue } from "bullmq";
 import { appConfig } from "@/Config";
 
 export const queueConfig: JobsOptions = {
@@ -11,7 +11,7 @@ export const queueConfig: JobsOptions = {
   attempts: appConfig.QUEUE.FAILED_JOB_RETRIES,
   backoff: {
     type: "exponential",
-    delay: 1000,
+    delay: appConfig.QUEUE.FAILED_JOB_RETRY_DELAY,
   },
 };
 

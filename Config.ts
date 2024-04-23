@@ -2,9 +2,7 @@ import { DateTime } from "luxon";
 import dotenv from "dotenv";
 import path from "path";
 
-const envFound = dotenv.config({
-  path: path.join(__dirname, ".env"),
-});
+const envFound = dotenv.config();
 
 if (envFound.error) throw new Error("ENV_NOT_FOUND_ERROR");
 
@@ -36,3 +34,5 @@ export const appConfig = {
     return DateTime.now();
   },
 };
+
+// console.log({ appConfig });

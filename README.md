@@ -25,12 +25,18 @@
 
 ## Project Overview
 
+You are tasked with developing a Node.js application using TypeScript that interacts with a weather API to fetch
+temperature data based on user-provided date and location parameters. The application must efficiently handle API rate
+limits and data formatting, and ensure data persistence using SQLite for caching.
+
 ## Technologies
 
 * Typescript
 * Express
 * Sqlite3
 * Prisma
+* Redis
+* BullMQ
 * Third-Party API
 
 ## Running the App
@@ -170,8 +176,16 @@ Though some of these errors will not be encountered given the [Data Validation](
 think making Abstractions robust and agnostic is good practise.
 
 As said in [Availability Over Accuracy](#prioritizes-availability-over-accuracy), if the 3rd party service returns an
-error,
-the System checks the Cache first for Expired Data. Barring that does it return the parsed error to the client.
+error, the System checks the Cache first for Expired Data. Only if no data exists does it return the parsed error to the
+client. Since we can be absolute sure that any error parsed as a `500` is the 3rd Party Service acting out, we implement
+a [Retry Mechanism](#retry-mechanism)
+
+### Retry Mechanism
+
+The System implements a simple Queue with BullMQ. This allows for retrying failed requests to the 3rd party API in the
+event that the 3rd Party Service returns an erratic error. This will enable the Server to make requests and cache said
+results so that when the Client retries the query, the result will be available. Max retries configurable in the .env as
+`FAILED_JOB_RETRIES`
 
 ### Test Coverage
 

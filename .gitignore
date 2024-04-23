@@ -135,3 +135,6 @@ dist
 .idea
 
 *.db
+*.app.cache
+
+*.rdb

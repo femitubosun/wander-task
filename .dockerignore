@@ -17,3 +17,5 @@ node_modules/
 .env.production.local
 
 npm-debug.log*
+
+*.app.cache
