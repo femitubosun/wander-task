@@ -18,8 +18,11 @@ limits and data formatting and ensure data persistence using SQLite for caching.
 
 ## Running the App
 
-- Clone the project: `git clone git@github.com:femitubosun/wander-task.git`
-- While the Docker Engine is running on your local machine, run `docker compose up`
+### Production
+
+- Clone the project: `git clone git@github.com:femitubosun/wander-task.git femi-wander-task`
+- Change into the dir `cd femi-wander-task`
+- While the Docker Engine is running on your local machine, run `npm run docker:up` or `npm run docker:up:silent`
 - The api is active on `http://localhost:3000/Search`
 
 ### Sample Request
@@ -51,9 +54,8 @@ Response
 
 ## Assumptions
 
-- It was assumed that, barring erratic errors, providing a valid date and the name of any city in the world (obscure or
-  otherwise), the 3rd Party Service will return a valid response.
-- A successful response from the 3rd-party API will always look like this:
+- It was assumed that, barring erratic errors, the 3rd Party Service will return a valid response for a valid date and the name of any city in the world (obscure or otherwise). In effect, any string.
+- A successful response from the 3rd-party API will look like this:
 
 ```json
 {
@@ -132,7 +134,7 @@ there's no Containerization. Dependencies are manually initialized and passed wh
 To improve availability, the system retains expired Cache Data. In the event that the 3rd-Party Service is unavailable
 but the expired result for the input parameters exists in the cache, the API will return expired cache data, while
 adding a message to notify the client. While this reduces data accuracy, notifying the client about the reduced accuracy
-makes it a reasonable compromise.
+makes it a reasonable compromise. The Server will retry the request and will hopefully have valid data when the Client sends the request again.
 
 ```json
 {
