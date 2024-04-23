@@ -18,6 +18,8 @@ RUN npm run prebuild
 
 RUN npx tspc
 
+RUN npx prisma generate
+
 RUN npm run prisma:migrate
 
 CMD ["npm", "start"]

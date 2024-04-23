@@ -32,5 +32,7 @@ services:
       - .:/app
       - /app/node_modules/
       - /app/dist
+      - /app/prisma/*.cache
+      - /app/logs
     depends_on:
       - redis

@@ -11,7 +11,7 @@
     "prebuild": "rm -rf ./dist",
     "clean": "rm -rf ./dist",
     "docker:up": "docker-compose up -d",
-    "build": "tspc",
+    "build": "npx tspc",
     "start": "NODE_ENV=production; node dist/bootstrap.js",
     "dev": "prisma migrate dev; ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
   },
