@@ -15,6 +15,8 @@ ENV CACHE_DB_URL="file:./app.cache"
 
 EXPOSE 3000
 
+RUN npm run prebuild
+
 RUN npm run build
 
 RUN npm run prisma:migrate

@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 
 const envFound = dotenv.config();
 
-if (envFound.error) throw new Error("ENV_NOT_FOUND_ERROR");
+if (process.env.NODE_ENV === "development" && envFound.error)
+  throw new Error("ENV_NOT_FOUND_ERROR");
 
 export const appConfig = {
   WEATHER_API_URL: process.env["WEATHER_API_URL"],
@@ -34,4 +35,4 @@ export const appConfig = {
   },
 };
 
-// console.log({ appConfig });
+console.log({ appConfig });

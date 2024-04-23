@@ -134,5 +134,5 @@ dist
 .dist
 .idea
 
-
+*app.cache
 *.rdb
