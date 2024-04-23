@@ -1,5 +1,33 @@
 # Weather Search API
 
+## Table of Contents
+<!-- TOC -->
+* [Weather Search API](#weather-search-api)
+  * [Table of Contents](#table-of-contents)
+  * [Project Overview](#project-overview)
+  * [Technologies](#technologies)
+  * [Running the App](#running-the-app)
+    * [Production](#production)
+    * [Sample Request](#sample-request)
+  * [Testing](#testing)
+  * [Assumptions](#assumptions)
+  * [Engineering Approach](#engineering-approach)
+    * [Data Validation](#data-validation)
+    * [Caching](#caching)
+      * [Caching Middleware](#caching-middleware)
+      * [SqliteCacheDriver](#sqlitecachedriver)
+      * [Expiration](#expiration)
+      * [Weather Cache Object](#weather-cache-object)
+    * [Dependency Injection (DI)](#dependency-injection-di)
+    * [Availability over Accuracy](#availability-over-accuracy)
+    * [Error Handling](#error-handling)
+      * [Error Handling Table](#error-handling-table)
+    * [Retry Mechanism](#retry-mechanism)
+    * [Test Coverage](#test-coverage)
+  * [Thoughts](#thoughts)
+<!-- TOC -->
+
+
 ## Project Overview
 
 You are tasked with developing a Node.js application using TypeScript that interacts with a weather API to fetch
@@ -98,7 +126,7 @@ following columns. A primary index is assumed, and an index for `[cacheKey, isEx
 - createdAt
 
 There can be at most two references to a cacheKey in the system: (a) A Valid Cache Data (b) An Expired Cache Data.
-See [Availability Over Accuracy](#prioritizes-availability-over-accuracy).
+See [Availability Over Accuracy](#availability-over-accuracy).
 
 #### Caching Middleware
 
@@ -129,7 +157,7 @@ this object.
 To increase the ease of testing the various components of the system, DI was utilized. However, to reduce complexity,
 there's no Containerization. Dependencies are manually initialized and passed where they are needed.
 
-### Prioritizes Availability over Accuracy
+### Availability over Accuracy
 
 To improve availability, the system retains expired Cache Data. In the event that the 3rd-Party Service is unavailable
 but the expired result for the input parameters exists in the cache, the API will return expired cache data, while
@@ -171,7 +199,7 @@ responsible for making sense of the response from the 3rd Party Service.
 Though some of these errors will not be encountered given the [Data Validation](#data-validation) in the System, I think
 making Abstractions robust and agnostic is good practise.
 
-As mentioned in [Availability Over Accuracy](#prioritizes-availability-over-accuracy), if the 3rd party service returns
+As mentioned in [Availability Over Accuracy](#availability-over-accuracy), if the 3rd party service returns
 an error, the System checks the Cache first for Expired Data. Only if no data exists does it return the parsed error to
 the client. Since we can be absolutely sure that any error parsed as a `500` is the 3rd Party Service acting out, we
 implement a [Retry Mechanism](#retry-mechanism).
