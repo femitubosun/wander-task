@@ -10,7 +10,8 @@
     "prisma:generate": "prisma generate",
     "prebuild": "rm -rf ./dist",
     "clean": "rm -rf ./dist",
-    "docker:up": "docker-compose up -d",
+    "docker:up:silent": "docker-compose up -d",
+    "docker:up": "docker-compose up",
     "build": "npx tspc",
     "start": "NODE_ENV=production; node dist/bootstrap.js",
     "dev": "prisma migrate dev; ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
