@@ -15,7 +15,7 @@ export const appConfig = {
     CACHE_TABLE_NAME: process.env["CACHE_TABLE_NAME"],
   },
   QUEUE: {
-    REDIS_QUEUE_HOST: process.env.NODE_ENV === "test" ? "localhost" : "redis",
+    REDIS_QUEUE_HOST: process.env.REDIS_QUEUE_HOST,
     REDIS_QUEUE_PORT: process.env.REDIS_QUEUE_PORT
       ? parseInt(process.env.REDIS_QUEUE_PORT)
       : 6379,
