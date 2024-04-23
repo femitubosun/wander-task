@@ -22,4 +22,4 @@ RUN npx prisma generate
 
 RUN npx prisma migrate dev
 
-CMD ["npm", "start"]
+ENTRYPOINT ["./Scripts/entrypoint.sh"]
