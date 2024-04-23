@@ -20,6 +20,29 @@ limits and data formatting and ensure data persistence using SQLite for caching.
 
 - Clone the project: `git clone git@github.com:femitubosun/wander-task.git`
 - While the Docker Engine is running on your local machine, run `docker compose up`
+- The api is active on `http://localhost:3000/Search`
+
+### Sample Request
+
+Request
+
+`curl -X POST http://localhost:3000/Search -d "location=New York" -d "date=2022-12-31T23:59:59Z"`
+
+Response
+
+```json
+
+{
+  "statusCode": 200,
+  "status": "success",
+  "message": "Temperature Information Retrieved Successfully",
+  "results": {
+    "celsius": 16.5,
+    "fahrenheit": 61.7
+  }
+}
+
+```
 
 ## Testing
 

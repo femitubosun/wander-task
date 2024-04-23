@@ -20,6 +20,6 @@ RUN npx tspc
 
 RUN npx prisma generate
 
-RUN npm run prisma:migrate
+RUN npx prisma migrate dev
 
 CMD ["npm", "start"]
