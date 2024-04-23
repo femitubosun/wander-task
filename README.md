@@ -133,15 +133,15 @@ responsible for making sense of the response from the 3rd Party Service.
 
 #### Error Handling Table
 
-| Error Code                                                               | Description (from API response)               | How it's handled      | Returned Status Code | Returned Message                                                              |
-|--------------------------------------------------------------------------|-----------------------------------------------|-----------------------|----------------------|-------------------------------------------------------------------------------|
-| No response                                                              | No response from the server                   | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                            |
-| 429 - Too Many Requests                                                  | User made too many requests in a short period | Too Many Requests     | 429                  | You are doing that too quickly. Please wait a few seconds before trying again |
-| 418 - I'm a teapot (treated as internal server error)                    | -                                             | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                            |
-| 500 - Internal Server Error (with 'invalid_date' in error message)       | Invalid date in request                       | Bad Request           | 400                  | Invalid Date. Check your input                                                |
-| 500 - Internal Server Error (with '(reading 'length')' in error message) | Invalid city data in request                  | Bad Request           | 400                  | Invalid city. Check your input                                                |
-| 400 - Bad Request                                                        | General bad request error from the API        | Bad Request           | 400                  | API error message (if available) or "Invalid Data. Please Check your input"   |
-| Other 500 Errors                                                         | Unidentified Internal Server Error            | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                            |
+| Error Code                                                               | Description (from API response)               | How it's handled      | Returned Status Code | Returned Message                                                            |
+|--------------------------------------------------------------------------|-----------------------------------------------|-----------------------|----------------------|-----------------------------------------------------------------------------|
+| No response                                                              | No response from the server                   | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                          |
+| 429 - Too Many Requests                                                  | User made too many requests in a short period | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                          |
+| 418 - I'm a teapot (treated as internal server error)                    | -                                             | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                          |
+| 500 - Internal Server Error (with 'invalid_date' in error message)       | Invalid date in request                       | Bad Request           | 400                  | Invalid Date. Check your input                                              |
+| 500 - Internal Server Error (with '(reading 'length')' in error message) | Invalid city data in request                  | Bad Request           | 400                  | Invalid city. Check your input                                              |
+| 400 - Bad Request                                                        | General bad request error from the API        | Bad Request           | 400                  | API error message (if available) or "Invalid Data. Please Check your input" |
+| Other 500 Errors                                                         | Unidentified Internal Server Error            | Internal Server Error | 500                  | ERROR_PROCESSING_REQUEST_TRY_AGAIN                                          |
 
 Though some of these errors will not be encountered given the [Data Validation](#data-validation) in the System, I think
 making Abstractions robust and agnostic is good practise.

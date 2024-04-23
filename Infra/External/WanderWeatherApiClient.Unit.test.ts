@@ -139,7 +139,7 @@ describe("WanderWeatherApiClient", () => {
     });
   });
 
-  it("should return error with status code 429 for too many requests", async () => {
+  it("should return 500 error with status code 429 for too many requests", async () => {
     mockHttpClient.post.mockRejectedValue({
       response: {
         status: HttpStatusCodeEnum.TOO_MANY_REQUESTS,
@@ -153,9 +153,8 @@ describe("WanderWeatherApiClient", () => {
 
     expect(result).toEqual({
       err: {
-        statusCode: HttpStatusCodeEnum.TOO_MANY_REQUESTS,
-        message:
-          "You are doing that too quickly. Please wait a few seconds before trying again",
+        statusCode: HttpStatusCodeEnum.INTERNAL_SERVER_ERROR,
+        message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
       },
       data: null,
     });

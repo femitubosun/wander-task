@@ -29,7 +29,7 @@ export class WanderWeatherApiClient {
   constructor(private httpClient: HttpClient) {}
 
   public async weatherSearch(
-    weatherSearchDto: WeatherSearchDto,
+    weatherSearchDto: WeatherSearchDto
   ): Promise<WeatherSearchReturnType> {
     try {
       const { apiResponse } = await this.httpClient.post({
@@ -70,9 +70,8 @@ export class WanderWeatherApiClient {
     if (statusCode === HttpStatusCodeEnum.TOO_MANY_REQUESTS) {
       return {
         err: {
-          statusCode,
-          message:
-            "You are doing that too quickly. Please wait a few seconds before trying again",
+          statusCode: HttpStatusCodeEnum.INTERNAL_SERVER_ERROR,
+          message: ERROR_PROCESSING_REQUEST_TRY_AGAIN,
         },
         data: null,
       };
