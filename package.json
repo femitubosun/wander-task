@@ -4,7 +4,7 @@
   "description": "Wander Backend Developer Test",
   "main": "bootstrap.js",
   "scripts": {
-    "test": "jest --coverage --testPathPattern='\\.unit\\.test\\.ts$'",
+    "test": "prisma migrate dev;jest --coverage --testPathPattern='\\.unit\\.test\\.ts$'",
     "test:integration": "./Scripts/run-integration.sh",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",

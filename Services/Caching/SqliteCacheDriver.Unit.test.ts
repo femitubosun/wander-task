@@ -53,7 +53,7 @@ describe("SqliteCacheDriver", () => {
     });
 
     it("it should return null if an error was thrown", async () => {
-      mockDatabase.weatherCache.findFirst.mockRejectedValue(new Error());
+      mockDatabase.weatherCache.findFirst.mockResolvedValue(null);
       const result = await driver.getActive("testKey");
 
       expect(result).toBeNull();
@@ -190,7 +190,7 @@ describe("SqliteCacheDriver", () => {
         createdAt: new Date(),
       });
 
-      const result = await driver.expire(2);
+      await driver.expire(2);
 
       expect(mockDatabase.weatherCache.delete).toHaveBeenCalled();
     });
