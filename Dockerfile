@@ -18,8 +18,15 @@ RUN npm run prebuild
 
 RUN npx tspc
 
-RUN chmod +x /app/entrypoint.sh
+# Apply Prisma migrations and start the application
+RUN npx prisma migrate deploy
+RUN npx prisma generate
 
-ENTRYPOINT ["app/entrypoint.sh"]
+# Run database migrations
+RUN npx prisma migrate dev
+
+#RUN chmod +x ./entrypoint.sh
+#
+#ENTRYPOINT ["./entrypoint.sh"]
 
 CMD [ "npm", "run", "start" ]
