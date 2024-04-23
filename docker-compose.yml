@@ -1,27 +1,33 @@
-version: '3'
+version: "3"
 
 services:
   redis:
-    image: 'redis:alpine'
+    image: "redis:alpine"
 
     ports:
-      - '6379:6379'
+      - "6379:6379"
     volumes:
       - ./misc/data:/data
       - ./misc/conf/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
     environment:
       - REDIS_REPLICATION_MODE=master
-  #    entrypoint: ./entrypoint.sh redis-server /usr/local/etc/redis/redis.conf
 
   app:
     build: .
-    image: 'wander-backend-task'
+    image: "wander-backend-task"
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=PRODUCTION
-      - CACHE_DB_URL=file:./app.cache
+      WEATHER_API_URL: https://staging.v4.api.wander.com/hiring-test/weather
+      PORT: 3000
+      CACHE_EXPIRE_AFTER_MINUTES: 30
+      CACHE_DB_URL: file:./app.cache
+      REDIS_QUEUE_HOST: redis
+      REDIS_QUEUE_PORT: 6379
+      FAILED_JOB_QUEUE_NAME: failed-search-queue
+      FAILED_JOB_RETRIES: 3
+      FAILED_JOB_RETRY_DELAY: 2000
     volumes:
       - .:/app
     depends_on:

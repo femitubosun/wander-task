@@ -6,10 +6,14 @@
   "scripts": {
     "test": "jest --coverage --testPathPattern='\\.unit\\.test\\.ts$'",
     "test:integration": "./Scripts/run-integration.sh",
-    "migrate": "npx prisma migrate dev",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "prebuild": "rm -rf ./dist",
+    "clean": "rm -rf ./dist",
+    "docker:up": "docker-compose up -d",
     "build": "tspc",
-    "start": "node dist/bootstrap.js",
-    "dev": "npx prisma migrate dev; ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
+    "start": "NODE_ENV=production node dist/bootstrap.js",
+    "dev": "prisma migrate dev; ts-node-dev --respawn --transpile-only --no-notify -r tsconfig-paths/register ./bootstrap.ts"
   },
   "keywords": [
     "Caching",

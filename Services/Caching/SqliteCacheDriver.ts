@@ -19,7 +19,8 @@ export class SqliteCacheDriver implements ICacheDriver {
 
       return WeatherCacheObject.fromRow(this, key, result);
     } catch (error: any) {
-      Logger.error(error);
+      // Logger.error(error);
+      console.log(error);
       return null;
     }
   }

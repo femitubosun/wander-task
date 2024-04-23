@@ -29,6 +29,6 @@ export class Application {
       Logger.error(`Job encountered an error`, failedReason);
     });
 
-    Logger.info(`Queue Initialized`);
+    Logger.info(`Queue Initialized 🚀`);
   }
 }
