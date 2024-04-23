@@ -28,11 +28,5 @@ services:
       FAILED_JOB_QUEUE_NAME: failed-search-queue
       FAILED_JOB_RETRIES: 3
       FAILED_JOB_RETRY_DELAY: 2000
-    volumes:
-      - .:/app
-      - /app/node_modules/
-      - /app/dist
-      - /app/prisma/*.cache
-      - /app/logs
     depends_on:
       - redis
