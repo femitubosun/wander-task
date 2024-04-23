@@ -63,12 +63,12 @@ describe("TemperatureConverter", () => {
 
     it("should return correct values for both temperature units", () => {
       const result = TemperatureConverter.convert({
-        temperature: 20.5,
+        temperature: 20.55,
         unit: "celsius",
       });
 
-      expect(result.celsius).toBe(20.5);
-      expect(result.fahrenheit).toBe(68.9);
+      expect(result.celsius).toBe(20.55);
+      expect(result.fahrenheit).toBe(68.99);
     });
   });
 });
